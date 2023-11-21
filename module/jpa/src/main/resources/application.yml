@@ -1,0 +1,14 @@
+spring:
+  jpa:
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: create
+  sql:
+    init:
+      mode: always
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://127.0.0.1:3306/hmg_developers_development?useBulkStmts=false
+    username: hmg
+    password: hmg
+
