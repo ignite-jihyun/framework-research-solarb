@@ -35,7 +35,7 @@ class SpecificValueOnlySchemaDirectiveWiring : KotlinSchemaDirectiveWiring {
             if (!supportedValue.equals(other = strArg, ignoreCase = true)) {
                 throw RuntimeException("Unsupported value, expected=$supportedValue actual=$strArg")
             }
-            originalDataFetcher.get(dataEnv)
+            originalDataFetcher[dataEnv]
         }
         environment.setDataFetcher(cakeOnlyFetcher)
         return field

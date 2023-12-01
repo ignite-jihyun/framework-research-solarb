@@ -6,17 +6,15 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 
 @Entity
-class Customer {
+open class Customer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null
-    var firstName: String? = null
-        private set
-    var lastName: String? = null
-        private set
+    private var firstName = ""
+    private var lastName = ""
 
-    protected constructor()
-    constructor(firstName: String?, lastName: String?) {
+    constructor()
+    constructor(firstName: String, lastName: String) {
         this.firstName = firstName
         this.lastName = lastName
     }
