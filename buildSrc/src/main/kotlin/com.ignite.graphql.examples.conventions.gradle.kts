@@ -29,7 +29,7 @@ dependencies {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        jvmTarget = "19"
+        jvmTarget = "17"
         freeCompilerArgs = listOf("-Xjsr305=strict")
     }
 }
@@ -40,7 +40,7 @@ tasks {
         config.from(File(rootDir, "detekt.yml").absolutePath)
     }
     kotlin {
-        jvmToolchain(19)
+        jvmToolchain(17)
     }
     ktlint {
         version.set(libs.versions.ktlint.core.get())
@@ -51,4 +51,8 @@ tasks {
     test {
         useJUnitPlatform()
     }
+}
+
+ktlint {
+    disabledRules.set(setOf("no-wildcard-imports", "no-consecutive-blank-lines"))
 }
