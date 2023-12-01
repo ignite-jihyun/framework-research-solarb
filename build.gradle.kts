@@ -21,6 +21,5 @@ sonar {
         property("sonar.projectKey", "ignite-jihyun_framework-research-solarb")
         property("sonar.organization", "ignite-jihyun")
         property("sonar.host.url", "https://sonarcloud.io")
-        property("sonar.gradle.skipCompile", true)
     }
 }

@@ -52,3 +52,7 @@ tasks {
         useJUnitPlatform()
     }
 }
+
+ktlint {
+    disabledRules.set(setOf("no-wildcard-imports", "no-consecutive-blank-lines"))
+}
