@@ -10,6 +10,18 @@ allprojects {
         mavenCentral()
         gradlePluginPortal()
     }
+
+    apply(plugin = "jacoco")
+
+    tasks.withType<Test>() {
+        finalizedBy("jacocoTestReport")
+    }
+
+    tasks.withType<JacocoReport> {
+        reports {
+            xml.required.set(true)
+        }
+    }
 }
 
 plugins {
