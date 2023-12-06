@@ -8,7 +8,7 @@ spring:
       mode: always
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://127.0.0.1:3306/hmg_developers_development?useBulkStmts=false
-    username: hmg
-    password: hmg
+    url: jdbc:mariadb://127.0.0.1:13306/researchdb
+    username: research
+    password: research
 

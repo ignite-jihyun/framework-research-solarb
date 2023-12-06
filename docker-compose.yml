@@ -1,0 +1,26 @@
+version: '3'
+services:
+  db:
+    image: mariadb:10.6.13
+    ports:
+      - "13306:3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: rootpwd
+      MARIADB_USER: research
+      MARIADB_PASSWORD: research
+      MARIADB_DATABASE: researchdb
+
+  redis:
+    image: redis:alpine
+    command: redis-server --port 6379
+    ports:
+      - "16379:6379"
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - "18080:8080"
+
+volumes:
+  db_data: { }
