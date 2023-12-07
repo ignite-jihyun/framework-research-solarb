@@ -1,4 +1,4 @@
-package com.ignite.jpa.example
+package com.ignite.entity
 
 import org.springframework.data.repository.CrudRepository
 
