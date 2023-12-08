@@ -23,7 +23,7 @@ dependencies {
 
     testImplementation(libs.h2database)
     testImplementation(libs.spring.boot.test)
-    testImplementation("org.junit.jupiter:junit-jupiter:5.9.2")
+    testImplementation(libs.kotlin.junit.test)
 }
 
 tasks.test {
