@@ -1,13 +1,9 @@
 package com.ignite.research
 
-
 import jakarta.persistence.*
 import org.hibernate.Hibernate
 import org.hibernate.annotations.NaturalId
 import org.springframework.data.jpa.repository.JpaRepository
-
-//import javax.persistence.*
-
 
 /**
  * This is how to define an entity according to the JPA specification:
@@ -34,11 +30,8 @@ open class Project {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "client_id", nullable = false)
     open lateinit var client: Client
-
 }
-
 interface ProjectRepository : JpaRepository<Project, Long>
-
 
 /**
  * Compiler plugins allow us to write Kotlin-style code that is compatible with JPA.
@@ -79,7 +72,6 @@ class Client(
      * Since the id can only be set by the DB, this method will return true only if the entity has been saved.
      */
     fun isNew(): Boolean = id == null
-
 }
 
 interface ClientRepository : JpaRepository<Client, Long>
@@ -132,8 +124,5 @@ data class Contact(
     override fun toString(): String {
         return this::class.simpleName + "(email = $email , name = $name )"
     }
-
 }
-
 interface ContactRepository : JpaRepository<Contact, String>
-

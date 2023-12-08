@@ -6,8 +6,8 @@ plugins {
     id("com.ignite.graphql.examples.conventions")
     alias(libs.plugins.kotlin.spring)
     alias(libs.plugins.spring.boot)
-//    alias(libs.plugins.kotlin.jpa)
-//    alias(libs.plugins.kotlin.allopen)
+    alias(libs.plugins.kotlin.jpa)
+    `java-library`
 }
 
 tasks.named<BootJar>("bootJar") {

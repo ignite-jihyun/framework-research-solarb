@@ -12,6 +12,9 @@ dependencies {
     implementation(libs.graphql.kotlin.hooks.provider)
     implementation(libs.spring.boot.validation)
     implementation(libs.spring.boot.webflux)
+    implementation(project(":module:entity"))
+
+    testImplementation(libs.h2database)
     testImplementation(libs.spring.boot.test)
     testImplementation(libs.reactor.test)
 }
