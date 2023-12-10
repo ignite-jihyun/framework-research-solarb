@@ -21,7 +21,10 @@ import com.expediagroup.graphql.server.types.GraphQLRequest
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.ignite.graphql.examples.server.spring.SUBSCRIPTION_ENDPOINT
-import org.junit.jupiter.api.*
+import org.junit.jupiter.api.Disabled
+import org.junit.jupiter.api.MethodOrderer
+import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.TestMethodOrder
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
@@ -33,10 +36,11 @@ import reactor.test.StepVerifier
 import reactor.test.publisher.TestPublisher
 import java.net.URI
 import kotlin.random.Random
+import kotlin.test.Test
 
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
-    properties = ["graphql.packages=com.ignite.graphql.examples.server.spring"]
+    properties = ["graphql.packages=com.ignite.graphql.examples.server.spring"],
 )
 @EnableAutoConfiguration
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -151,7 +155,7 @@ class SimpleSubscriptionIT(@LocalServerPort private var port: Int) {
         session: WebSocketSession,
         query: String,
         output: TestPublisher<String>,
-        initPayload: Any? = null
+        initPayload: Any? = null,
     ): Mono<Void> {
         val id = Random.nextInt().toString()
         val initMessage = getInitMessage(id, initPayload)
@@ -169,14 +173,16 @@ class SimpleSubscriptionIT(@LocalServerPort private var port: Int) {
                         } else if (it.type == ApolloSubscriptionOperationMessage.ServerMessages.GQL_COMPLETE.type) {
                             output.complete()
                         }
-                    }
+                    },
             )
             .then()
     }
 
     private fun ApolloSubscriptionOperationMessage.toJson() = objectMapper.writeValueAsString(this)
     private fun getInitMessage(id: String, payload: Any?) = ApolloSubscriptionOperationMessage(
-        ApolloSubscriptionOperationMessage.ClientMessages.GQL_CONNECTION_INIT.type, id = id, payload = payload
+        ApolloSubscriptionOperationMessage.ClientMessages.GQL_CONNECTION_INIT.type,
+        id = id,
+        payload = payload,
     ).toJson()
 
     private fun getStartMessage(query: String, id: String): String {

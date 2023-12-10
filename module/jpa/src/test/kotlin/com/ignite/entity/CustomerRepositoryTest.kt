@@ -1,4 +1,4 @@
-package com.ignite.jpa.example
+package com.ignite.entity
 
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

@@ -1,28 +1,29 @@
 import org.springframework.boot.gradle.tasks.bundling.BootJar
 
-description = "jpa module"
+description = "entity module"
 
 plugins {
     id("com.ignite.graphql.examples.conventions")
     alias(libs.plugins.kotlin.spring)
     alias(libs.plugins.spring.boot)
+    alias(libs.plugins.kotlin.jpa)
     `java-library`
-}
-
-kotlin {
-    jvmToolchain(17)
 }
 
 tasks.named<BootJar>("bootJar") {
     isEnabled = false
 }
 
+allOpen {
+    annotations("jakarta.persistence.Entity", "jakarta.persistence.MappedSuperclass", "jakarta.persistence.Embeddable")
+}
+
 dependencies {
-    api(libs.spring.boot.starter.data.jpa)
-    runtimeOnly(libs.mariadb.client)
+    api(project(":module:jpa"))
 
     testImplementation(libs.h2database)
     testImplementation(libs.spring.boot.test)
+    testImplementation(libs.kotlin.junit.test)
 }
 
 tasks.test {
