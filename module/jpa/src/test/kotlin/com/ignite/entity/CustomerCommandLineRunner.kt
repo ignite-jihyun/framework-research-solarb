@@ -7,9 +7,9 @@ import java.util.function.Consumer
 
 @Component
 class CustomerCommandLineRunner(
-    val repository: CustomerRepository
+    val repository: CustomerRepository,
 ) : CommandLineRunner {
-    private val log = LoggerFactory.getLogger(AccessingDataJpaApplication::class.java)
+    private val log = LoggerFactory.getLogger(CustomerCommandLineRunner::class.java)
     override fun run(vararg args: String?) {
         // save a few customers
         repository.save(Customer("Jack", "foo"))
