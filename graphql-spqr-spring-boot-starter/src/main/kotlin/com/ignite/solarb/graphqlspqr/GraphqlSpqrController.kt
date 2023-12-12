@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller
 
 @GraphQLApi
 @Controller
-class GraphqlSpqrService(
+class GraphqlSpqrController(
     val boardRepository: BoardRepository,
     val commentRepository: CommentRepository,
     var userRepository: UserRepository

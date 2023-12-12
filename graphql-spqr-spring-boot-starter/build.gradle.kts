@@ -12,6 +12,7 @@ allOpen {
 
 dependencies {
     implementation(libs.spring.boot.web)
+    implementation(libs.spring.boot.webflux)
     implementation(libs.graphql.spqr.spring.boot)
     implementation(project(":module:entity"))
     runtimeOnly(libs.mariadb.client)
