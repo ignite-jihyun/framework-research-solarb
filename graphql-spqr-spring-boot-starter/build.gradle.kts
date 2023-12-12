@@ -1,14 +1,9 @@
-description = "entity module"
+description = "An example GraphQL SPQR Spring Boot Starter"
 
 plugins {
     id("com.ignite.graphql.examples.conventions")
     alias(libs.plugins.kotlin.spring)
-    alias(libs.plugins.kotlin.jpa)
-    `java-library`
-}
-
-tasks.jar {
-    enabled = true
+    alias(libs.plugins.spring.boot)
 }
 
 allOpen {
@@ -16,9 +11,12 @@ allOpen {
 }
 
 dependencies {
-    api(project(":module:jpa"))
+    implementation(libs.spring.boot.web)
+    implementation(libs.spring.boot.webflux)
+    implementation(libs.graphql.spqr.spring.boot)
+    implementation(project(":module:entity"))
+    runtimeOnly(libs.mariadb.client)
 
     testImplementation(libs.h2database)
     testImplementation(libs.spring.boot.test)
-    testImplementation(libs.kotlin.junit.test)
 }

@@ -60,8 +60,9 @@ class Comment : PrimaryKeyEntity() {
     var audit: Audit = Audit()
 }
 
-interface CommentRepository : JpaRepository<Comment, Long>
-
+interface CommentRepository : JpaRepository<Comment, Long> {
+    fun findByBoard(board: Board): List<Comment>
+}
 
 @Entity(name = "`user`")
 class User(

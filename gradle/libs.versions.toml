@@ -23,7 +23,8 @@ reactor-core = "3.5.9"
 reactor-extensions = "1.2.2"
 slf4j = "2.0.7"
 spring = "6.0.11"
-spring-boot = "3.2.0" # Nov 23, 2023
+#spring-boot = "3.2.0" # Nov 23, 2023
+spring-boot = "3.1.6" # Nov 23, 2023
 h2 = "2.2.224" # Sep 18, 2023
 graphql-kotlin = "7.0.2"
 
@@ -48,6 +49,7 @@ maven-plugin-development = "0.4.2"
 nexus-publish-plugin = "1.3.0"
 plugin-publish = "1.2.1"
 mariadb = "3.1.2"
+graphql-spqr = "1.0.0"
 # ====================
 # LIBRARIES
 # ====================
@@ -85,12 +87,13 @@ slf4j = { group = "org.slf4j", name = "slf4j-api", version.ref = "slf4j" }
 spring-boot-config = { group = "org.springframework.boot", name = "spring-boot-configuration-processor", version.ref = "spring-boot" }
 spring-boot-netty = { group = "org.springframework.boot", name = "spring-boot-starter-reactor-netty", version.ref = "spring-boot" }
 spring-boot-webflux = { group = "org.springframework.boot", name = "spring-boot-starter-webflux", version.ref = "spring-boot" }
+spring-boot-web = { group = "org.springframework.boot", name = "spring-boot-starter-web", version.ref = "spring-boot" }
+spring-boot-websocket = { group = "org.springframework.boot", name = "spring-boot-starter-websocket", version.ref = "spring-boot" }
 spring-webflux = { group = "org.springframework", name = "spring-webflux", version.ref = "spring" }
 h2database = { group = "com.h2database", name = "h2", version.ref = "h2" }
 graphql-kotlin-spring-server = { group = "com.expediagroup", name = "graphql-kotlin-spring-server", version.ref = "graphql-kotlin" }
 graphql-kotlin-hooks-provider = { group = "com.expediagroup", name = "graphql-kotlin-hooks-provider", version.ref = "graphql-kotlin" }
-
-# test dependencies
+graphql-spqr-spring-boot = { group = "io.leangen.graphql", name = "graphql-spqr-spring-boot-starter", version.ref = "graphql-spqr" }# test dependencies
 compile-testing = { group = "dev.zacsweers.kctfork", name = "core", version.ref = "compile-testing" }
 icu = { group = "com.ibm.icu", name = "icu4j", version.ref = "icu" }
 logback = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }

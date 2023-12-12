@@ -15,6 +15,7 @@ allprojects {
 
     tasks.withType<Test>() {
         finalizedBy("jacocoTestReport")
+        systemProperty("spring.profiles.active", "test")
     }
 
     tasks.withType<JacocoReport> {

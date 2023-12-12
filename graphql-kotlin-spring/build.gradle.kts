@@ -7,12 +7,17 @@ plugins {
     alias(libs.plugins.spring.boot)
 }
 
+kotlin {
+    jvmToolchain(17)
+}
+
 dependencies {
     implementation(libs.graphql.kotlin.spring.server)
     implementation(libs.graphql.kotlin.hooks.provider)
     implementation(libs.spring.boot.validation)
     implementation(libs.spring.boot.webflux)
     implementation(project(":module:entity"))
+    runtimeOnly(libs.mariadb.client)
 
     testImplementation(libs.h2database)
     testImplementation(libs.spring.boot.test)
