@@ -22,7 +22,3 @@ dependencies {
 tasks.jar {
     enabled = true
 }
-
-tasks.test {
-    systemProperty("spring.profiles.active", "test")
-}

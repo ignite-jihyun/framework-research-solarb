@@ -22,7 +22,3 @@ dependencies {
     testImplementation(libs.spring.boot.test)
     testImplementation(libs.kotlin.junit.test)
 }
-
-tasks.test {
-    systemProperty("spring.profiles.active", "test")
-}
