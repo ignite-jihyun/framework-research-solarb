@@ -6,6 +6,10 @@ plugins {
     alias(libs.plugins.spring.boot)
 }
 
+allOpen {
+    annotations("jakarta.persistence.Entity", "jakarta.persistence.MappedSuperclass", "jakarta.persistence.Embeddable")
+}
+
 dependencies {
     implementation(libs.spring.boot.web)
     implementation(libs.graphql.spqr.spring.boot)
