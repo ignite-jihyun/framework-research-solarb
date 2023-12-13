@@ -3,6 +3,7 @@ package com.ignite.research
 
 import jakarta.persistence.*
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
 import java.time.LocalDateTime
 
 @Embeddable
@@ -62,6 +63,22 @@ class Comment : PrimaryKeyEntity() {
 
 interface CommentRepository : JpaRepository<Comment, Long> {
     fun findByBoard(board: Board): List<Comment>
+
+    fun findByBoardIn(boards: List<Board>): List<Comment>
+
+    @Query(
+        value = """
+        WITH ranked_comments AS (
+        SELECT c.*, ROW_NUMBER() OVER (PARTITION BY c.board_id ORDER BY c.id DESC) as row_num
+        FROM comment c WHERE c.board_id IN :boardIds
+                                                                                                            )
+        SELECT *
+        FROM ranked_comments
+        WHERE row_num <= 3
+        order by id desc
+    """, nativeQuery = true
+    )
+    fun findLastThreeByPostIdIn(boardIds: List<Long>): List<Comment>
 }
 
 @Entity(name = "`user`")

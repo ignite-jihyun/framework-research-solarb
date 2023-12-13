@@ -26,7 +26,7 @@ class GraphqlSpqrControllerTest(
     @Test
     @Order(1)
     fun board() {
-        val query = """ {board(boardId: 2) { id title comments { id }}} """
+        val query = """ {board(boardId: 2) { id title comments { id content }}} """
         val expectedJSON = """ {"data":{"board":{"id":2,"title":"board title 2","comments":[{"id":3},{"id":4}]}}} """
         expectQueryResult(query, expectedJSON)
     }
@@ -35,7 +35,7 @@ class GraphqlSpqrControllerTest(
     @Test
     @Order(1)
     fun boards() {
-        val query = """ {boards { id }} """
+        val query = """ {boards { id comments { id content }}} """
         val expectedJSON = """ {"data":{"boards":[{"id":1},{"id":2}]}} """
         expectQueryResult(query, expectedJSON)
     }
