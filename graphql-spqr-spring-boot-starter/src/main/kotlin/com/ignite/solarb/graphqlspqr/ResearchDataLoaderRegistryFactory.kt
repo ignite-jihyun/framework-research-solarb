@@ -4,7 +4,10 @@ import com.ignite.research.Board
 import com.ignite.research.Comment
 import com.ignite.research.CommentRepository
 import io.leangen.graphql.spqr.spring.autoconfigure.DataLoaderRegistryFactory
-import org.dataloader.*
+import org.dataloader.DataLoaderFactory
+import org.dataloader.DataLoaderOptions
+import org.dataloader.DataLoaderRegistry
+import org.dataloader.MappedBatchLoader
 import org.springframework.stereotype.Component
 import java.util.concurrent.CompletableFuture
 
@@ -14,21 +17,39 @@ class ResearchDataLoaderRegistryFactory(
 ) : DataLoaderRegistryFactory {
     override fun createDataLoaderRegistry(): DataLoaderRegistry {
         return DataLoaderRegistry()
-            .register("commentsByDataLoader", DataLoaderFactory.newDataLoader(commentsByDataLoader, DataLoaderOptions.newOptions()))
+            .register("commentsByDataLoader", DataLoaderFactory.newMappedDataLoader(commentsByDataLoader, DataLoaderOptions.newOptions()))
             .register("lastThreeComments", DataLoaderFactory.newMappedDataLoader(lastThreeComments, DataLoaderOptions.newOptions()))
+            .register("commentsByDataLoaderByBoardId", DataLoaderFactory.newMappedDataLoader(commentsByDataLoaderByBoardId, DataLoaderOptions.newOptions()))
+            .register("lastThreeCommentsByBoardId", DataLoaderFactory.newMappedDataLoader(lastThreeCommentsByBoardId, DataLoaderOptions.newOptions()))
     }
 
-    private val commentsByDataLoader: BatchLoader<Board, List<Comment>> =
-        BatchLoader { boards ->
+    val commentsByDataLoader: MappedBatchLoader<Board, List<Comment>> =
+        MappedBatchLoader { boards ->
             CompletableFuture.supplyAsync {
-                commentRepository.findByBoardIn(boards).groupBy { it.board }.values.toList()
+                val commentsByBoardId = commentRepository.findByBoardIn(boards.toList()).groupBy { it.board.id }
+                boards.associateWith { board -> commentsByBoardId[board.id] ?: emptyList() }
             }
         }
 
-    private val lastThreeComments: MappedBatchLoader<Board, List<Comment>> =
+    val lastThreeComments: MappedBatchLoader<Board, List<Comment>> =
         MappedBatchLoader { boards ->
             CompletableFuture.supplyAsync {
-                commentRepository.findLastThreeByPostIdIn(boards.mapNotNull { it.id }).groupBy { it.board }
+                val commentsByBoardId: Map<Long, List<Comment>> = commentRepository.findLastThreeByPostIdIn(boards.mapNotNull { it.id }).groupBy { it.board.id!! }
+                boards.associateWith { board -> commentsByBoardId[board.id] ?: emptyList() }
+            }
+        }
+
+    val commentsByDataLoaderByBoardId: MappedBatchLoader<Long, List<Comment>> =
+        MappedBatchLoader { boardIds ->
+            CompletableFuture.supplyAsync {
+                commentRepository.findByBoard_IdIn(boardIds.toList()).groupBy { it.board.id }
+            }
+        }
+
+    val lastThreeCommentsByBoardId: MappedBatchLoader<Long, List<Comment>> =
+        MappedBatchLoader { boardIds ->
+            CompletableFuture.supplyAsync {
+                commentRepository.findLastThreeByPostIdIn(boardIds.toList()).groupBy { it.board.id }
             }
         }
 }

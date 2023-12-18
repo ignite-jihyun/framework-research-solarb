@@ -76,4 +76,14 @@ class GraphqlSpqrController(
     fun lastThreeComments(@GraphQLContext board: Board, @GraphQLEnvironment env: ResolutionEnvironment): CompletableFuture<List<Comment>> {
         return env.dataFetchingEnvironment.getDataLoader<Board, List<Comment>>("lastThreeComments").load(board)
     }
+
+    @GraphQLQuery
+    fun commentsByDataLoaderByBoardId(@GraphQLContext board: Board, @GraphQLEnvironment env: ResolutionEnvironment): CompletableFuture<List<Comment>> {
+        return env.dataFetchingEnvironment.getDataLoader<Long, List<Comment>>("commentsByDataLoaderByBoardId").load(board.id)
+    }
+
+    @GraphQLQuery
+    fun lastThreeCommentsByBoardId(@GraphQLContext board: Board, @GraphQLEnvironment env: ResolutionEnvironment): CompletableFuture<List<Comment>> {
+        return env.dataFetchingEnvironment.getDataLoader<Long, List<Comment>>("lastThreeCommentsByBoardId").load(board.id)
+    }
 }

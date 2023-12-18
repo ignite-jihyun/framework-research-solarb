@@ -26,8 +26,21 @@ abstract class PrimaryKeyEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Long? = null
-)
+) {
+    // https://vmaks.github.io/2019/11/27/how-to-implement-equals-hashcode-for-kotlin-entity/
+    @Override
+    override fun hashCode(): Int {
+        return 13
+    }
 
+    @Override
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || javaClass != other.javaClass) return false
+        other as PrimaryKeyEntity
+        return id == other.id
+    }
+}
 
 @Entity(name = "`board`")
 class Board : PrimaryKeyEntity() {
@@ -65,6 +78,10 @@ interface CommentRepository : JpaRepository<Comment, Long> {
     fun findByBoard(board: Board): List<Comment>
 
     fun findByBoardIn(boards: List<Board>): List<Comment>
+
+    @Suppress("FunctionName")
+    fun findByBoard_IdIn(ids: List<Long>): List<Comment>
+
 
     @Query(
         value =
