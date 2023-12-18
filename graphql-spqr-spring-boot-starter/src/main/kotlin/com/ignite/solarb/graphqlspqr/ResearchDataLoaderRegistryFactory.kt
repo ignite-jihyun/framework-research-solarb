@@ -13,7 +13,7 @@ import java.util.concurrent.CompletableFuture
 
 @Component
 class ResearchDataLoaderRegistryFactory(
-    val commentRepository: CommentRepository
+    val commentRepository: CommentRepository,
 ) : DataLoaderRegistryFactory {
     override fun createDataLoaderRegistry(): DataLoaderRegistry {
         return DataLoaderRegistry()
@@ -42,7 +42,7 @@ class ResearchDataLoaderRegistryFactory(
     val commentsByDataLoaderByBoardId: MappedBatchLoader<Long, List<Comment>> =
         MappedBatchLoader { boardIds ->
             CompletableFuture.supplyAsync {
-                commentRepository.findByBoard_IdIn(boardIds.toList()).groupBy { it.board.id }
+                commentRepository.findByBoardIds(boardIds.toList()).groupBy { it.board.id }
             }
         }
 

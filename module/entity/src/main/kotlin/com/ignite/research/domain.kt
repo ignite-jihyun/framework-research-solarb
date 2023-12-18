@@ -18,14 +18,14 @@ class Audit(
     val createdBy: String = "",
 
     @Column(name = "updated_by")
-    var updatedBy: String = ""
+    var updatedBy: String = "",
 )
 
 @MappedSuperclass
 abstract class PrimaryKeyEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null
+    var id: Long? = null,
 ) {
     // https://vmaks.github.io/2019/11/27/how-to-implement-equals-hashcode-for-kotlin-entity/
     @Override
@@ -79,8 +79,8 @@ interface CommentRepository : JpaRepository<Comment, Long> {
 
     fun findByBoardIn(boards: List<Board>): List<Comment>
 
-    @Suppress("FunctionName")
-    fun findByBoard_IdIn(ids: List<Long>): List<Comment>
+    @Query("select c from Comment c where c.board.id in ?1")
+    fun findByBoardIds(ids: List<Long>): List<Comment>
 
 
     @Query(
@@ -108,7 +108,7 @@ class User(
 
     var password: String = "",
     @Embedded
-    val audit: Audit = Audit()
+    val audit: Audit = Audit(),
 ) : PrimaryKeyEntity()
 
 interface UserRepository : JpaRepository<User, Long>
