@@ -67,7 +67,8 @@ interface CommentRepository : JpaRepository<Comment, Long> {
     fun findByBoardIn(boards: List<Board>): List<Comment>
 
     @Query(
-        value = """
+        value =
+        """
         WITH ranked_comments AS (
         SELECT c.*, ROW_NUMBER() OVER (PARTITION BY c.board_id ORDER BY c.id DESC) as row_num
         FROM comment c WHERE c.board_id IN :boardIds
@@ -76,7 +77,8 @@ interface CommentRepository : JpaRepository<Comment, Long> {
         FROM ranked_comments
         WHERE row_num <= 3
         order by id desc
-    """, nativeQuery = true
+        """,
+        nativeQuery = true,
     )
     fun findLastThreeByPostIdIn(boardIds: List<Long>): List<Comment>
 }
