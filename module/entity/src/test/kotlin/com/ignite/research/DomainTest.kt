@@ -9,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
+import kotlin.test.assertNotEquals
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -79,5 +80,19 @@ class DomainTest(
         commentRepository.findAll().forEach {
             logger.info { "comment: ${it.id}" }
         }
+    }
+
+    @Test
+    fun `hash code`() {
+        assertEquals(13, Board().hashCode())
+    }
+
+    @Test
+    fun `test equals`() {
+        val board = Board().apply { id = 1L }
+        assertEquals(board, board)
+        assertEquals(Board().apply { id = 1L }, Board().apply { id = 1L })
+        assertNotEquals(Board().apply { id = 2L }, Board().apply { id = 1L })
+        assertFalse(Comment().apply { id = 1L } == Board().apply { id = 1L })
     }
 }
