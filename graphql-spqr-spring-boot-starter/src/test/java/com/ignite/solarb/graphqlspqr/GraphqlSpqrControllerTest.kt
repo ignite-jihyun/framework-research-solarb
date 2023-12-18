@@ -36,7 +36,7 @@ class GraphqlSpqrControllerTest(
     @Order(1)
     fun boards() {
         val query = """ {boards { id comments { id content }}} """
-        val expectedJSON = """ {"data":{"boards":[{"id":1},{"id":2}]}} """
+        val expectedJSON = """ {"data":{"boards":[{"id":1},{"id":2},{"id":3}]}} """
         expectQueryResult(query, expectedJSON)
     }
 
@@ -44,7 +44,7 @@ class GraphqlSpqrControllerTest(
     @Order(1)
     fun comments() {
         val query = """ {comments { id }} """
-        val expectedJSON = """ {"data":{"comments":[{"id":1},{"id":2},{"id":3},{"id":4}]}} """
+        val expectedJSON = """ {"data":{"comments":[{"id":1},{"id":2},{"id":3},{"id":4},{"id":5},{"id":6},{"id":7},{"id":8},{"id":9}]}} """
         expectQueryResult(query, expectedJSON)
     }
 
@@ -75,16 +75,16 @@ class GraphqlSpqrControllerTest(
     @Test
     @Order(2)
     fun mutationBoard() {
-        val query = """ mutation {board(board: {title: "title 3", content: "content: 3"})} """
-        val expectedJSON = """ {"data":{"board":3}} """
+        val query = """ mutation {board(board: {title: "title 4", content: "content: 4"})} """
+        val expectedJSON = """ {"data":{"board":4}} """
         expectQueryResult(query, expectedJSON)
     }
 
     @Test
     @Order(2)
     fun mutationComment() {
-        val query = """ mutation {comment(comment: {board: {id: 1}, content: "content: 5"})} """
-        val expectedJSON = """ {"data":{"comment":5}} """
+        val query = """ mutation {comment(comment: {board: {id: 1}, content: "content: 10"})} """
+        val expectedJSON = """ {"data":{"comment":10}} """
         expectQueryResult(query, expectedJSON)
     }
 
