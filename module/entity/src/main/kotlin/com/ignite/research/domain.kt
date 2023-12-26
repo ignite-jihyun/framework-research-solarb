@@ -3,6 +3,7 @@ package com.ignite.research
 
 import jakarta.persistence.*
 import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
 import java.time.LocalDateTime
 
 @Embeddable
@@ -17,16 +18,29 @@ class Audit(
     val createdBy: String = "",
 
     @Column(name = "updated_by")
-    var updatedBy: String = ""
+    var updatedBy: String = "",
 )
 
 @MappedSuperclass
 abstract class PrimaryKeyEntity(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Long? = null
-)
+    var id: Long? = null,
+) {
+    // https://vmaks.github.io/2019/11/27/how-to-implement-equals-hashcode-for-kotlin-entity/
+    @Override
+    override fun hashCode(): Int {
+        return 13
+    }
 
+    @Override
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other == null || javaClass != other.javaClass) return false
+        other as PrimaryKeyEntity
+        return id == other.id
+    }
+}
 
 @Entity(name = "`board`")
 class Board : PrimaryKeyEntity() {
@@ -62,6 +76,28 @@ class Comment : PrimaryKeyEntity() {
 
 interface CommentRepository : JpaRepository<Comment, Long> {
     fun findByBoard(board: Board): List<Comment>
+
+    fun findByBoardIn(boards: List<Board>): List<Comment>
+
+    @Query("select c from Comment c where c.board.id in ?1")
+    fun findByBoardIds(ids: List<Long>): List<Comment>
+
+
+    @Query(
+        value =
+        """
+        WITH ranked_comments AS (
+        SELECT c.*, ROW_NUMBER() OVER (PARTITION BY c.board_id ORDER BY c.id DESC) as row_num
+        FROM comment c WHERE c.board_id IN :boardIds
+                                                                                                            )
+        SELECT *
+        FROM ranked_comments
+        WHERE row_num <= 3
+        order by id desc
+        """,
+        nativeQuery = true,
+    )
+    fun findLastThreeByPostIdIn(boardIds: List<Long>): List<Comment>
 }
 
 @Entity(name = "`user`")
@@ -72,7 +108,7 @@ class User(
 
     var password: String = "",
     @Embedded
-    val audit: Audit = Audit()
+    val audit: Audit = Audit(),
 ) : PrimaryKeyEntity()
 
 interface UserRepository : JpaRepository<User, Long>

@@ -26,7 +26,7 @@ class GraphqlSpqrControllerTest(
     @Test
     @Order(1)
     fun board() {
-        val query = """ {board(boardId: 2) { id title comments { id }}} """
+        val query = """ {board(boardId: 2) { id title comments { id content } }} """
         val expectedJSON = """ {"data":{"board":{"id":2,"title":"board title 2","comments":[{"id":3},{"id":4}]}}} """
         expectQueryResult(query, expectedJSON)
     }
@@ -35,8 +35,8 @@ class GraphqlSpqrControllerTest(
     @Test
     @Order(1)
     fun boards() {
-        val query = """ {boards { id }} """
-        val expectedJSON = """ {"data":{"boards":[{"id":1},{"id":2}]}} """
+        val query = """ {boards { id comments { id content }}} """
+        val expectedJSON = """ {"data":{"boards":[{"id":1},{"id":2},{"id":3}]}} """
         expectQueryResult(query, expectedJSON)
     }
 
@@ -44,7 +44,7 @@ class GraphqlSpqrControllerTest(
     @Order(1)
     fun comments() {
         val query = """ {comments { id }} """
-        val expectedJSON = """ {"data":{"comments":[{"id":1},{"id":2},{"id":3},{"id":4}]}} """
+        val expectedJSON = """ {"data":{"comments":[{"id":1},{"id":2},{"id":3},{"id":4},{"id":5},{"id":6},{"id":7},{"id":8},{"id":9}]}} """
         expectQueryResult(query, expectedJSON)
     }
 
@@ -75,16 +75,16 @@ class GraphqlSpqrControllerTest(
     @Test
     @Order(2)
     fun mutationBoard() {
-        val query = """ mutation {board(board: {title: "title 3", content: "content: 3"})} """
-        val expectedJSON = """ {"data":{"board":3}} """
+        val query = """ mutation {board(board: {title: "title 4", content: "content: 4"})} """
+        val expectedJSON = """ {"data":{"board":4}} """
         expectQueryResult(query, expectedJSON)
     }
 
     @Test
     @Order(2)
     fun mutationComment() {
-        val query = """ mutation {comment(comment: {board: {id: 1}, content: "content: 5"})} """
-        val expectedJSON = """ {"data":{"comment":5}} """
+        val query = """ mutation {comment(comment: {board: {id: 1}, content: "content: 10"})} """
+        val expectedJSON = """ {"data":{"comment":10}} """
         expectQueryResult(query, expectedJSON)
     }
 
@@ -94,6 +94,32 @@ class GraphqlSpqrControllerTest(
         val query = """ mutation {user(user: {name: "name 3"})} """
         val expectedJSON = """ {"data":{"user":3}} """
         expectQueryResult(query, expectedJSON)
+    }
+
+    @Test
+    @Order(1)
+    fun commentsByDataLoader() {
+        expectQueryResult(
+            """ {board(boardId: 2) { commentsByDataLoader { id }}} """,
+            """ {"data":{"board":{"commentsByDataLoader":[{"id":3},{"id":4}]}}} """
+        )
+        expectQueryResult(
+            """ {board(boardId: 2) { commentsByDataLoaderByBoardId { id }}} """,
+            """ {"data":{"board":{"commentsByDataLoaderByBoardId":[{"id":3},{"id":4}]}}} """
+        )
+    }
+
+    @Test
+    @Order(1)
+    fun lastThreeComments() {
+        expectQueryResult(
+            """ {board(boardId: 3) { lastThreeComments { id } }} """,
+            """ {"data":{"board":{"lastThreeComments":[{"id":7},{"id":8},{"id":9}]}}} """
+        )
+        expectQueryResult(
+            """ {board(boardId: 3) { lastThreeCommentsByBoardId { id } }} """,
+            """ {"data":{"board":{"lastThreeCommentsByBoardId":[{"id":7},{"id":8},{"id":9}]}}} """
+        )
     }
 
     private fun expectQueryResult(query: String, expectedJSON: String) {
