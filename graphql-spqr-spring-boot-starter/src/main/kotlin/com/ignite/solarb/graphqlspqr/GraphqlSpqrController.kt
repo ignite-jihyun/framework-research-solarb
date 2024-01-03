@@ -15,9 +15,9 @@ import java.util.concurrent.CompletableFuture
 class GraphqlSpqrController(
     val boardRepository: BoardRepository,
     val commentRepository: CommentRepository,
-    var userRepository: UserRepository
+    var userRepository: UserRepository,
 ) {
-    @GraphQLQuery
+    @GraphQLQuery(description = "get board by id")
     fun board(boardId: Long): Board {
         return boardRepository.findById(boardId).orElseThrow()
     }
@@ -52,7 +52,7 @@ class GraphqlSpqrController(
         return userRepository.findAll()
     }
 
-    @GraphQLMutation
+    @GraphQLMutation(description = "save board")
     fun board(board: Board): Long {
         return boardRepository.save(board).id!!
     }

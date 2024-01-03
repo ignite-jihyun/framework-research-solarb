@@ -1,28 +1,23 @@
 package com.ignite.solarb.graphqlspqr
 
-import org.json.JSONException
-import org.json.JSONObject
 import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.TestMethodOrder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
-import reactor.core.publisher.Mono
 import kotlin.test.Test
 
 
 @SpringBootTest(
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = [GraphqlSpqrApplication::class]
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+    classes = [GraphqlSpqrApplication::class],
 )
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class GraphqlSpqrControllerTest(
     @Autowired
-    private val webTestClient: WebTestClient
-) {
-    private val GRAPHQL_PATH = "/graphql"
-
+    private val webTestClient: WebTestClient,
+) : AbstractGraphqlSpqrTest(webTestClient) {
     @Test
     @Order(1)
     fun board() {
@@ -30,7 +25,6 @@ class GraphqlSpqrControllerTest(
         val expectedJSON = """ {"data":{"board":{"id":2,"title":"board title 2","comments":[{"id":3},{"id":4}]}}} """
         expectQueryResult(query, expectedJSON)
     }
-
 
     @Test
     @Order(1)
@@ -101,11 +95,11 @@ class GraphqlSpqrControllerTest(
     fun commentsByDataLoader() {
         expectQueryResult(
             """ {board(boardId: 2) { commentsByDataLoader { id }}} """,
-            """ {"data":{"board":{"commentsByDataLoader":[{"id":3},{"id":4}]}}} """
+            """ {"data":{"board":{"commentsByDataLoader":[{"id":3},{"id":4}]}}} """,
         )
         expectQueryResult(
             """ {board(boardId: 2) { commentsByDataLoaderByBoardId { id }}} """,
-            """ {"data":{"board":{"commentsByDataLoaderByBoardId":[{"id":3},{"id":4}]}}} """
+            """ {"data":{"board":{"commentsByDataLoaderByBoardId":[{"id":3},{"id":4}]}}} """,
         )
     }
 
@@ -114,31 +108,11 @@ class GraphqlSpqrControllerTest(
     fun lastThreeComments() {
         expectQueryResult(
             """ {board(boardId: 3) { lastThreeComments { id } }} """,
-            """ {"data":{"board":{"lastThreeComments":[{"id":7},{"id":8},{"id":9}]}}} """
+            """ {"data":{"board":{"lastThreeComments":[{"id":7},{"id":8},{"id":9}]}}} """,
         )
         expectQueryResult(
             """ {board(boardId: 3) { lastThreeCommentsByBoardId { id } }} """,
-            """ {"data":{"board":{"lastThreeCommentsByBoardId":[{"id":7},{"id":8},{"id":9}]}}} """
+            """ {"data":{"board":{"lastThreeCommentsByBoardId":[{"id":7},{"id":8},{"id":9}]}}} """,
         )
-    }
-
-    private fun expectQueryResult(query: String, expectedJSON: String) {
-        webTestClient.post()
-            .uri(GRAPHQL_PATH)
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(Mono.just(toJSON(query)), String::class.java)
-            .exchange()
-            .expectStatus().isOk()
-            .expectBody().json(
-                expectedJSON, false
-            )
-    }
-
-    private fun toJSON(query: String): String {
-        return try {
-            JSONObject().put("query", query).toString()
-        } catch (e: JSONException) {
-            throw RuntimeException(e)
-        }
     }
 }
