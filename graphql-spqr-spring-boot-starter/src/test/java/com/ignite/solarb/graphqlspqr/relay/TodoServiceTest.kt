@@ -3,8 +3,10 @@ package com.ignite.solarb.graphqlspqr.relay
 import com.ignite.solarb.graphqlspqr.AbstractGraphqlSpqrTest
 import com.ignite.solarb.graphqlspqr.GraphqlSpqrApplication
 import org.json.JSONObject
+import org.junit.jupiter.api.MethodOrderer
 import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestMethodOrder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.web.reactive.server.WebTestClient
@@ -13,6 +15,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
     classes = [GraphqlSpqrApplication::class],
 )
+@TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class TodoServiceTest(
     @Autowired
     private val webTestClient: WebTestClient,
