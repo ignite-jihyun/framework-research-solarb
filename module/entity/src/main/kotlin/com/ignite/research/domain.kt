@@ -89,8 +89,7 @@ interface CommentRepository : JpaRepository<Comment, Long> {
     fun findByBoardIds(ids: List<Long>): List<Comment>
 
     @Query(
-        value =
-            """
+        value = """
         WITH ranked_comments AS (
         SELECT c.*, ROW_NUMBER() OVER (PARTITION BY c.board_id ORDER BY c.id DESC) as row_num
         FROM comment c WHERE c.board_id IN :boardIds
