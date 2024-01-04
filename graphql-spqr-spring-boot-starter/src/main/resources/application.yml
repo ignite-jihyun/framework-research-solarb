@@ -17,3 +17,8 @@ graphql:
   spqr:
     gui:
       enabled: true
+#    relay:
+#      enabled: true
+#logging:
+#  level:
+#    graphql: DEBUG

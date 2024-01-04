@@ -12,7 +12,6 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import reactor.core.publisher.Mono
 import kotlin.test.Test
 
-
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT, classes = [GraphqlSpqrApplication::class]
 )
@@ -58,17 +57,17 @@ class GraphqlSpqrControllerTest(
 
     @Test
     @Order(1)
-    fun users() {
-        val query = """ {users { id }} """
-        val expectedJSON = """ {"data":{"users":[{"id":1},{"id":2}]}} """
+    fun researchUsers() {
+        val query = """ {researchUsers { id }} """
+        val expectedJSON = """ {"data":{"researchUsers":[{"id":1},{"id":2}]}} """
         expectQueryResult(query, expectedJSON)
     }
 
     @Test
     @Order(1)
-    fun user() {
-        val query = """ {user(userId: 1) { id name}} """
-        val expectedJSON = """ {"data":{"user":{"id":1,"name":"name 1"}}} """
+    fun researchUser() {
+        val query = """ {researchUser(userId: 1) { id name}} """
+        val expectedJSON = """ {"data":{"researchUser":{"id":1,"name":"name 1"}}} """
         expectQueryResult(query, expectedJSON)
     }
 
@@ -91,8 +90,8 @@ class GraphqlSpqrControllerTest(
     @Test
     @Order(2)
     fun mutationUser() {
-        val query = """ mutation {user(user: {name: "name 3"})} """
-        val expectedJSON = """ {"data":{"user":3}} """
+        val query = """ mutation {researchUser(user: {name: "name 3"})} """
+        val expectedJSON = """ {"data":{"researchUser":3}} """
         expectQueryResult(query, expectedJSON)
     }
 
