@@ -1,6 +1,11 @@
 package com.ignite.solarb.graphqlspqr
 
-import com.ignite.research.*
+import com.ignite.research.Board
+import com.ignite.research.BoardRepository
+import com.ignite.research.Comment
+import com.ignite.research.CommentRepository
+import com.ignite.research.ResearchUser
+import com.ignite.research.UserRepository
 import io.leangen.graphql.annotations.GraphQLContext
 import io.leangen.graphql.annotations.GraphQLEnvironment
 import io.leangen.graphql.annotations.GraphQLMutation
@@ -38,17 +43,19 @@ class GraphqlSpqrController(
     }
 
     @GraphQLQuery
-    fun comments(@GraphQLContext board: Board): List<Comment> {
+    fun comments(
+        @GraphQLContext board: Board,
+    ): List<Comment> {
         return commentRepository.findByBoard(board)
     }
 
     @GraphQLQuery
-    fun user(userId: Long): User {
+    fun researchUser(userId: Long): ResearchUser {
         return userRepository.findById(userId).orElseThrow()
     }
 
     @GraphQLQuery
-    fun users(): List<User> {
+    fun researchUsers(): List<ResearchUser> {
         return userRepository.findAll()
     }
 
@@ -63,27 +70,39 @@ class GraphqlSpqrController(
     }
 
     @GraphQLMutation
-    fun user(user: User): Long {
+    fun researchUser(user: ResearchUser): Long {
         return userRepository.save(user).id!!
     }
 
     @GraphQLQuery
-    fun commentsByDataLoader(@GraphQLContext board: Board, @GraphQLEnvironment env: ResolutionEnvironment): CompletableFuture<List<Comment>> {
+    fun commentsByDataLoader(
+        @GraphQLContext board: Board,
+        @GraphQLEnvironment env: ResolutionEnvironment,
+    ): CompletableFuture<List<Comment>> {
         return env.dataFetchingEnvironment.getDataLoader<Board, List<Comment>>("commentsByDataLoader").load(board)
     }
 
     @GraphQLQuery
-    fun lastThreeComments(@GraphQLContext board: Board, @GraphQLEnvironment env: ResolutionEnvironment): CompletableFuture<List<Comment>> {
+    fun lastThreeComments(
+        @GraphQLContext board: Board,
+        @GraphQLEnvironment env: ResolutionEnvironment,
+    ): CompletableFuture<List<Comment>> {
         return env.dataFetchingEnvironment.getDataLoader<Board, List<Comment>>("lastThreeComments").load(board)
     }
 
     @GraphQLQuery
-    fun commentsByDataLoaderByBoardId(@GraphQLContext board: Board, @GraphQLEnvironment env: ResolutionEnvironment): CompletableFuture<List<Comment>> {
+    fun commentsByDataLoaderByBoardId(
+        @GraphQLContext board: Board,
+        @GraphQLEnvironment env: ResolutionEnvironment,
+    ): CompletableFuture<List<Comment>> {
         return env.dataFetchingEnvironment.getDataLoader<Long, List<Comment>>("commentsByDataLoaderByBoardId").load(board.id)
     }
 
     @GraphQLQuery
-    fun lastThreeCommentsByBoardId(@GraphQLContext board: Board, @GraphQLEnvironment env: ResolutionEnvironment): CompletableFuture<List<Comment>> {
+    fun lastThreeCommentsByBoardId(
+        @GraphQLContext board: Board,
+        @GraphQLEnvironment env: ResolutionEnvironment,
+    ): CompletableFuture<List<Comment>> {
         return env.dataFetchingEnvironment.getDataLoader<Long, List<Comment>>("lastThreeCommentsByBoardId").load(board.id)
     }
 }

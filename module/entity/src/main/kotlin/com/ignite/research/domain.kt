@@ -1,7 +1,17 @@
 package com.ignite.research
 
-
-import jakarta.persistence.*
+import jakarta.persistence.Column
+import jakarta.persistence.Embeddable
+import jakarta.persistence.Embedded
+import jakarta.persistence.Entity
+import jakarta.persistence.FetchType
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.JoinColumn
+import jakarta.persistence.ManyToOne
+import jakarta.persistence.MappedSuperclass
+import jakarta.persistence.OneToMany
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import java.time.LocalDateTime
@@ -10,13 +20,10 @@ import java.time.LocalDateTime
 class Audit(
     @Column(name = "created_at", updatable = false)
     val createdAt: LocalDateTime = LocalDateTime.now(),
-
     @Column(name = "updated_at")
     var updatedAt: LocalDateTime = LocalDateTime.now(),
-
     @Column(name = "created_by", updatable = false)
     val createdBy: String = "",
-
     @Column(name = "updated_by")
     var updatedBy: String = "",
 )
@@ -69,7 +76,6 @@ class Comment : PrimaryKeyEntity() {
     @JoinColumn(name = "board_id", nullable = false)
     lateinit var board: Board
 
-
     @Embedded
     var audit: Audit = Audit()
 }
@@ -82,10 +88,9 @@ interface CommentRepository : JpaRepository<Comment, Long> {
     @Query("select c from Comment c where c.board.id in ?1")
     fun findByBoardIds(ids: List<Long>): List<Comment>
 
-
     @Query(
         value =
-        """
+            """
         WITH ranked_comments AS (
         SELECT c.*, ROW_NUMBER() OVER (PARTITION BY c.board_id ORDER BY c.id DESC) as row_num
         FROM comment c WHERE c.board_id IN :boardIds
@@ -101,14 +106,12 @@ interface CommentRepository : JpaRepository<Comment, Long> {
 }
 
 @Entity(name = "`user`")
-class User(
+class ResearchUser(
     var userId: String = "",
-
     var name: String = "",
-
     var password: String = "",
     @Embedded
     val audit: Audit = Audit(),
 ) : PrimaryKeyEntity()
 
-interface UserRepository : JpaRepository<User, Long>
+interface UserRepository : JpaRepository<ResearchUser, Long>
